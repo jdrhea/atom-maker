@@ -10,6 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1705427028897727920}
   - component: {fileID: 8169066075325899148}
+  - component: {fileID: -4689745719596934503}
+  - component: {fileID: 4063462028138401332}
+  - component: {fileID: 9160885022606650119}
   m_Layer: 0
   m_Name: helium3--
   m_TagString: helium3--
@@ -84,3 +87,65 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!50 &-4689745719596934503
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8915915500851008013}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
+--- !u!58 &4063462028138401332
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8915915500851008013}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 1.615
+--- !u!114 &9160885022606650119
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8915915500851008013}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab3c2a5b7b1fa4394911a380eba0ed6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isProton: 0
+  isNeutron: 0
+  isElectron: 0
+  isProtonNeutron: 0
+  islithium6: 0
+  isHydrogen: 0
+  isRadioactive: 0
+  Temperature: 1
+  TemperatureTxt: {fileID: 0}
+  score: {fileID: 0}
+  curIonLevel: 50
+  maxIonLevel: 100
+  healthBar: {fileID: 0}

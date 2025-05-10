@@ -16,19 +16,20 @@ public class Drag : MonoBehaviour
     public bool isElectron;
     public bool isProtonNeutron;
     public bool islithium6;
-    public bool ishydrogen;
+    public bool isHydrogen;
+    public bool isRadioactive;
 
     public static int scoreValue = 0;
-    public int Temperature = 0;
+    public static int Temperature = 1;
 
     public TMP_Text TemperatureTxt;
     public Text score;
     public int curIonLevel = 50;
     public int maxIonLevel = 100;
     public Slider healthBar;
-    
-    
-    
+
+
+
     private void Awake()
     {
         GameObject scoreObject = GameObject.Find("skoer");
@@ -36,36 +37,36 @@ public class Drag : MonoBehaviour
         if (scoreObject != null)
         {
             score = scoreObject.GetComponent<Text>();
-            
+
         }
         GameObject sliderObject = GameObject.Find("IonSlider");
 
         if (sliderObject != null)
         {
             healthBar = sliderObject.GetComponent<Slider>();
-            
+
         }
         GameObject tempObject = GameObject.Find("Temperature");
 
         if (tempObject != null)
         {
-           TemperatureTxt = tempObject.GetComponent<TMP_Text>();
-            
+            TemperatureTxt = tempObject.GetComponent<TMP_Text>();
+
         }
-        
-        
+
+
     }
     void Update()
     {
         if (dragging)
         {
-            transform.position = Camera.main.ScreenToWorldPoint (Input.mousePosition) + offset;
+            transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition) + offset;
 
         }
     }
     void OnMouseDown()
     {
-        offset = transform. position - Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        offset = transform.position - Camera.main.ScreenToWorldPoint(Input.mousePosition);
         dragging = true;
     }
     void OnMouseUp()
@@ -75,7 +76,7 @@ public class Drag : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.CompareTag("toolbox"))
+        if (collision.CompareTag("toolbox"))
         {
             Destroy(gameObject);
             Debug.Log("I have collided with toolbox");
@@ -83,7 +84,23 @@ public class Drag : MonoBehaviour
     }
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if(isProton == true && collision.CompareTag("electron") && Input.GetKeyDown(KeyCode.Space))
+        // Unstable Atoms
+        if (isNeutron && collision.CompareTag("electron") ||
+            isNeutron && collision.CompareTag("deuterium") ||
+            isNeutron && collision.CompareTag("helium"))
+        {
+            Instantiate(Resources.Load("unstable-atom"), transform.position, Quaternion.identity);
+            scoreValue -= 2;
+            Destroy(collision.gameObject);
+            Destroy(gameObject);
+            Destroy(GameObject.Find("unstable-atom(Clone)"), 2f);
+            SetIon(0);
+            SetScore();
+        }
+
+        // Neutral Atom Combinations
+        // Hydrogen Variants
+        if (isProton && collision.CompareTag("electron"))
         {
             Instantiate(Resources.Load("hydrogen"), transform.position, Quaternion.identity);
             Destroy(collision.gameObject);
@@ -91,31 +108,8 @@ public class Drag : MonoBehaviour
             scoreValue += 5;
             SetScore();
             SetIon(1);
-
-
         }
-        if(isProton && collision.CompareTag("neutron") && Input.GetKeyDown(KeyCode.C))
-        {
-            Instantiate(Resources.Load("p&n-combination"), transform.position, Quaternion.identity);
-            Destroy(collision.gameObject);
-            Destroy(gameObject);
-            scoreValue += 0;
-            SetScore();
-            SetIon(1);
-
-
-        }
-        if(isNeutron && collision.CompareTag("electron") && Input.GetKeyDown(KeyCode.Space) || isNeutron && collision.CompareTag("deuterium") && Input.GetKeyDown(KeyCode.Space))
-        {
-            Instantiate(Resources.Load("unstable-atom"), transform.position, Quaternion.identity);
-            Destroy(collision.gameObject);
-            Destroy(gameObject);
-            SetIon(0);
-            
-
-
-        }
-        if(isNeutron && collision.CompareTag("hydrogen") && Input.GetKeyDown(KeyCode.Space))
+        if (isNeutron && collision.CompareTag("hydrogen"))
         {
             Instantiate(Resources.Load("hydrogen-2"), transform.position, Quaternion.identity);
             Destroy(collision.gameObject);
@@ -123,10 +117,8 @@ public class Drag : MonoBehaviour
             scoreValue += 1;
             SetScore();
             SetIon(1);
-
-
         }
-        if(isProton && collision.CompareTag("deuterium") && Input.GetKeyDown(KeyCode.Space))
+        if (isProton && collision.CompareTag("deuterium"))
         {
             Instantiate(Resources.Load("helium-3"), transform.position, Quaternion.identity);
             Destroy(collision.gameObject);
@@ -134,10 +126,10 @@ public class Drag : MonoBehaviour
             scoreValue += 3;
             SetScore();
             SetIon(1);
-
-
         }
-        if(isNeutron && collision.CompareTag("hel3") && Input.GetKeyDown(KeyCode.Space))
+
+        // Helium Variants
+        if (isNeutron && collision.CompareTag("hel3"))
         {
             Instantiate(Resources.Load("helium"), transform.position, Quaternion.identity);
             Destroy(collision.gameObject);
@@ -145,10 +137,10 @@ public class Drag : MonoBehaviour
             scoreValue += 5;
             SetScore();
             SetIon(1);
-
-
         }
-        if(isProtonNeutron && collision.CompareTag("helium") && Input.GetKeyDown(KeyCode.Space))
+
+        // Lithium Variants
+        if (isProtonNeutron && collision.CompareTag("helium"))
         {
             Instantiate(Resources.Load("lithium6"), transform.position, Quaternion.identity);
             Destroy(collision.gameObject);
@@ -156,10 +148,8 @@ public class Drag : MonoBehaviour
             scoreValue += 3;
             SetScore();
             SetIon(1);
-            
-            
         }
-        if(isNeutron && collision.CompareTag("lithium-6") && Input.GetKeyDown(KeyCode.Space))
+        if (isNeutron && collision.CompareTag("lithium-6"))
         {
             Instantiate(Resources.Load("lithium7"), transform.position, Quaternion.identity);
             Destroy(collision.gameObject);
@@ -167,11 +157,19 @@ public class Drag : MonoBehaviour
             scoreValue += 1;
             SetScore();
             SetIon(1);
-        
-
         }
-        // plus ions
-        if(isProton && collision.CompareTag("neutron") && Input.GetKeyDown(KeyCode.Space))
+        if (isElectron && collision.CompareTag("lithium7"))
+        {
+            Instantiate(Resources.Load("lithium7--"), transform.position, Quaternion.identity);
+            Destroy(collision.gameObject);
+            Destroy(gameObject);
+            scoreValue += 1;
+            SetScore();
+            SetIon(1);
+        }
+
+        // Positive Ion Transformations
+        if (isProton && collision.CompareTag("neutron"))
         {
             Instantiate(Resources.Load("plus-ion-hydrogen2"), transform.position, Quaternion.identity);
             Destroy(collision.gameObject);
@@ -180,7 +178,7 @@ public class Drag : MonoBehaviour
             SetScore();
             SetIon(2);
         }
-        if(isElectron && collision.CompareTag("deuterium++") && Input.GetKeyDown(KeyCode.Space))
+        if (isElectron && collision.CompareTag("deuterium++"))
         {
             Instantiate(Resources.Load("hydrogen-2"), transform.position, Quaternion.identity);
             Destroy(collision.gameObject);
@@ -189,7 +187,7 @@ public class Drag : MonoBehaviour
             SetScore();
             SetIon(2);
         }
-        if(isElectron && collision.CompareTag("helium3++") && Input.GetKeyDown(KeyCode.Space))
+        if (isElectron && collision.CompareTag("helium3++"))
         {
             Instantiate(Resources.Load("helium-3"), transform.position, Quaternion.identity);
             Destroy(collision.gameObject);
@@ -198,7 +196,7 @@ public class Drag : MonoBehaviour
             SetScore();
             SetIon(2);
         }
-        if(isElectron && collision.CompareTag("helium4++") && Input.GetKeyDown(KeyCode.Space))
+        if (isElectron && collision.CompareTag("helium4++"))
         {
             Instantiate(Resources.Load("helium"), transform.position, Quaternion.identity);
             Destroy(collision.gameObject);
@@ -207,26 +205,17 @@ public class Drag : MonoBehaviour
             SetScore();
             SetIon(2);
         }
-         if(isElectron && collision.CompareTag("lithium6++") && Input.GetKeyDown(KeyCode.Space))
+        if (isProtonNeutron && collision.CompareTag("lithium7"))
         {
-            Instantiate(Resources.Load("lithium6"), transform.position, Quaternion.identity);
+            Instantiate(Resources.Load("berillyum9++"), transform.position, Quaternion.identity);
             Destroy(collision.gameObject);
             Destroy(gameObject);
             scoreValue += 3;
             SetScore();
             SetIon(2);
         }
-        if(isElectron && collision.CompareTag("lithium7++") && Input.GetKeyDown(KeyCode.Space))
-        {
-            Instantiate(Resources.Load("lithium7"), transform.position, Quaternion.identity);
-            Destroy(collision.gameObject);
-            Destroy(gameObject);
-            scoreValue += 1;
-            SetScore();
-            SetIon(2);
-        }
-        //negative ions
-        if(isElectron && collision.CompareTag("hydrogen") && Input.GetKeyDown(KeyCode.Space))
+        // Negative Ion Transformations
+        if (isElectron && collision.CompareTag("hydrogen"))
         {
             Instantiate(Resources.Load("hydrogen1--"), transform.position, Quaternion.identity);
             Destroy(collision.gameObject);
@@ -235,7 +224,7 @@ public class Drag : MonoBehaviour
             SetScore();
             SetIon(0);
         }
-        if(isProton && collision.CompareTag("hydrogen2--") && Input.GetKeyDown(KeyCode.Space))
+        if (isProton && collision.CompareTag("hydrogen2--"))
         {
             Instantiate(Resources.Load("hydrogen-2"), transform.position, Quaternion.identity);
             Destroy(collision.gameObject);
@@ -244,7 +233,7 @@ public class Drag : MonoBehaviour
             SetScore();
             SetIon(0);
         }
-        if(isProton && collision.CompareTag("helium3--") && Input.GetKeyDown(KeyCode.Space))
+        if (isProton && collision.CompareTag("helium3--"))
         {
             Instantiate(Resources.Load("helium-3"), transform.position, Quaternion.identity);
             Destroy(collision.gameObject);
@@ -253,35 +242,9 @@ public class Drag : MonoBehaviour
             SetScore();
             SetIon(0);
         }
-        if(isProton && collision.CompareTag("helium4--") && Input.GetKeyDown(KeyCode.Space))
-        {
-            Instantiate(Resources.Load("helium"), transform.position, Quaternion.identity);
-            Destroy(collision.gameObject);
-            Destroy(gameObject);
-            scoreValue += 1;
-            SetScore();
-            SetIon(0);
-        }
-         if(isProton && collision.CompareTag("lithium6--") && Input.GetKeyDown(KeyCode.Space))
-        {
-            Instantiate(Resources.Load("lithium6"), transform.position, Quaternion.identity);
-            Destroy(collision.gameObject);
-            Destroy(gameObject);
-            scoreValue += 3;
-            SetScore();
-            SetIon(0);
-        }
-        if(isProton && collision.CompareTag("lithium7--") && Input.GetKeyDown(KeyCode.Space))
-        {
-            Instantiate(Resources.Load("lithium7"), transform.position, Quaternion.identity);
-            Destroy(collision.gameObject);
-            Destroy(gameObject);
-            scoreValue += 1;
-            SetScore();
-            SetIon(0);
-        }
-        //fusion
-        if(ishydrogen && collision.CompareTag("hydrogen") && Input.GetKeyDown(KeyCode.Space) && Temperature >= 1000)
+
+        // Fusion Reactions
+        if (isHydrogen && collision.CompareTag("hydrogen") && Temperature >= 1000)
         {
             Instantiate(Resources.Load("helium"), transform.position, Quaternion.identity);
             Destroy(collision.gameObject);
@@ -291,30 +254,41 @@ public class Drag : MonoBehaviour
             SetIon(0);
         }
 
-        
+
     }
     void SetScore()
     {
         score.text = "Money: $" + scoreValue;
-        
+
     }
     public void SetIon(int SetIon)
-    {	
-        curIonLevel = SetIon;    
+    {
+        curIonLevel = SetIon;
         curIonLevel = Mathf.Clamp(curIonLevel, 0, maxIonLevel); // Ensure the value stays within bounds
         healthBar.value = curIonLevel;
-	}
+    }
     void SetScoreTemp()
     {
         TemperatureTxt.text = "Temperature: " + Temperature + "kK";
     }
-    public void BuyTemp()
+    public void BuyTemp200()
     {
-        if(scoreValue >= 20)
+        if (scoreValue >= 0)
         {
             Temperature += 200;
-            scoreValue -= 20;
+            //scoreValue -= 20;
             SetScoreTemp();
+            SetScore();
+        }
+    }
+    public void BuyTemp2k()
+    {
+        if (scoreValue >= 0)
+        {
+            Temperature += 2000;
+            //scoreValue -= 50;
+            SetScoreTemp();
+            SetScore();
         }
     }
     

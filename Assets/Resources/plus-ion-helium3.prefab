@@ -141,6 +141,10 @@ MonoBehaviour:
   isElectron: 0
   isProtonNeutron: 0
   islithium6: 0
+  isHydrogen: 0
+  isRadioactive: 0
+  Temperature: 1
+  TemperatureTxt: {fileID: 0}
   score: {fileID: 0}
   curIonLevel: 50
   maxIonLevel: 100

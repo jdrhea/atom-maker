@@ -27,6 +27,9 @@ TagManager:
   - lithium7--
   - lithium6++
   - helium4++
+  - lithium7
+  - berillyum9++
+  - beryllium-8++
   layers:
   - Default
   - TransparentFX

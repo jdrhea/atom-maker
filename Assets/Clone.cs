@@ -7,6 +7,7 @@ public class Clone : MonoBehaviour
     public GameObject neutronPrefab;
     public GameObject protonPrefab;
     public GameObject electronPrefab;
+    public GameObject protonNeutronPrefab;
     public Vector3 newPosition;
     public Quaternion NewRotation;
 
@@ -28,6 +29,11 @@ public class Clone : MonoBehaviour
     public void InstantiateElectron()
     {
         Instantiate(electronPrefab,newPosition,NewRotation);
+        //this.GetComponent<Drag>().enabled=false;
+    }
+    public void InstantiatePandN()
+    {
+        Instantiate(protonNeutronPrefab,newPosition,NewRotation);
         //this.GetComponent<Drag>().enabled=false;
     }
 
