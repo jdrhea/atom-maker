@@ -87,7 +87,8 @@ public class Drag : MonoBehaviour
         // Unstable Atoms
         if (isNeutron && collision.CompareTag("electron") ||
             isNeutron && collision.CompareTag("deuterium") ||
-            isNeutron && collision.CompareTag("helium"))
+            isNeutron && collision.CompareTag("helium") ||
+            isNeutron && collision.CompareTag("berillyum9"))
         {
             Instantiate(Resources.Load("unstable-atom"), transform.position, Quaternion.identity);
             scoreValue -= 2;
@@ -105,7 +106,7 @@ public class Drag : MonoBehaviour
             Instantiate(Resources.Load("hydrogen"), transform.position, Quaternion.identity);
             Destroy(collision.gameObject);
             Destroy(gameObject);
-            scoreValue += 5;
+            scoreValue += 3;
             SetScore();
             SetIon(1);
         }
@@ -134,7 +135,7 @@ public class Drag : MonoBehaviour
             Instantiate(Resources.Load("helium"), transform.position, Quaternion.identity);
             Destroy(collision.gameObject);
             Destroy(gameObject);
-            scoreValue += 5;
+            scoreValue += 1;
             SetScore();
             SetIon(1);
         }
@@ -165,9 +166,27 @@ public class Drag : MonoBehaviour
             Destroy(gameObject);
             scoreValue += 1;
             SetScore();
+            SetIon(0);
+        }
+        // Berillyum Variants
+        if (isElectron && collision.CompareTag("berillyum9++"))
+        {
+            Instantiate(Resources.Load("berillyum9"), transform.position, Quaternion.identity);
+            Destroy(collision.gameObject);
+            Destroy(gameObject);
+            scoreValue += 1;
+            SetScore();
             SetIon(1);
         }
-
+        if (isProton && collision.CompareTag("berillyum9"))
+        {
+            Instantiate(Resources.Load("boron10++"), transform.position, Quaternion.identity);
+            Destroy(collision.gameObject);
+            Destroy(gameObject);
+            scoreValue += 3;
+            SetScore();
+            SetIon(2);
+        }
         // Positive Ion Transformations
         if (isProton && collision.CompareTag("neutron"))
         {
@@ -185,7 +204,7 @@ public class Drag : MonoBehaviour
             Destroy(gameObject);
             scoreValue += 1;
             SetScore();
-            SetIon(2);
+            SetIon(1);
         }
         if (isElectron && collision.CompareTag("helium3++"))
         {
@@ -194,7 +213,7 @@ public class Drag : MonoBehaviour
             Destroy(gameObject);
             scoreValue += 1;
             SetScore();
-            SetIon(2);
+            SetIon(1);
         }
         if (isElectron && collision.CompareTag("helium4++"))
         {
@@ -203,7 +222,7 @@ public class Drag : MonoBehaviour
             Destroy(gameObject);
             scoreValue += 1;
             SetScore();
-            SetIon(2);
+            SetIon(1);
         }
         if (isProtonNeutron && collision.CompareTag("lithium7"))
         {
@@ -214,13 +233,41 @@ public class Drag : MonoBehaviour
             SetScore();
             SetIon(2);
         }
+        if (isProton && collision.CompareTag("berillyum9"))
+        {
+            Instantiate(Resources.Load("boron10++"), transform.position, Quaternion.identity);
+            Destroy(collision.gameObject);
+            Destroy(gameObject);
+            scoreValue += 3;
+            SetScore();
+            SetIon(2);
+        }
+        // Boron Variants
+         if (isElectron && collision.CompareTag("boron10++"))
+        {
+            Instantiate(Resources.Load("boron10"), transform.position, Quaternion.identity);
+            Destroy(collision.gameObject);
+            Destroy(gameObject);
+            scoreValue += 1;
+            SetScore();
+            SetIon(1);
+        }
+        if (isNeutron && collision.CompareTag("boron10"))
+        {
+            Instantiate(Resources.Load("boron11"), transform.position, Quaternion.identity);
+            Destroy(collision.gameObject);
+            Destroy(gameObject);
+            scoreValue += 1;
+            SetScore();
+            SetIon(1);
+        }
         // Negative Ion Transformations
         if (isElectron && collision.CompareTag("hydrogen"))
         {
             Instantiate(Resources.Load("hydrogen1--"), transform.position, Quaternion.identity);
             Destroy(collision.gameObject);
             Destroy(gameObject);
-            scoreValue += 5;
+            scoreValue += 1;
             SetScore();
             SetIon(0);
         }
@@ -273,20 +320,20 @@ public class Drag : MonoBehaviour
     }
     public void BuyTemp200()
     {
-        if (scoreValue >= 0)
+        if (scoreValue >= 20)
         {
             Temperature += 200;
-            //scoreValue -= 20;
+            scoreValue -= 20;
             SetScoreTemp();
             SetScore();
         }
     }
     public void BuyTemp2k()
     {
-        if (scoreValue >= 0)
+        if (scoreValue >= 50)
         {
             Temperature += 2000;
-            //scoreValue -= 50;
+            scoreValue -= 50;
             SetScoreTemp();
             SetScore();
         }

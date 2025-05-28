@@ -30,6 +30,10 @@ TagManager:
   - lithium7
   - berillyum9++
   - beryllium-8++
+  - berillyum9
+  - boron10++
+  - boron10
+  - boron11
   layers:
   - Default
   - TransparentFX
