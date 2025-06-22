@@ -23,10 +23,12 @@ public class Drag : MonoBehaviour
     public static int Temperature = 1;
 
     public TMP_Text TemperatureTxt;
+    public TMP_Text AtomCreationTxt;
     public Text score;
     public int curIonLevel = 50;
     public int maxIonLevel = 100;
     public Slider healthBar;
+    public GameObject clone;
 
 
 
@@ -51,6 +53,13 @@ public class Drag : MonoBehaviour
         if (tempObject != null)
         {
             TemperatureTxt = tempObject.GetComponent<TMP_Text>();
+
+        }
+        GameObject createText = GameObject.Find("Creation");
+
+        if (createText != null)
+        {
+            AtomCreationTxt = createText.GetComponent<TMP_Text>();
 
         }
 
@@ -88,15 +97,20 @@ public class Drag : MonoBehaviour
         if (isNeutron && collision.CompareTag("electron") ||
             isNeutron && collision.CompareTag("deuterium") ||
             isNeutron && collision.CompareTag("helium") ||
-            isNeutron && collision.CompareTag("berillyum9"))
+            isNeutron && collision.CompareTag("berillyum9") ||
+            isNeutron && collision.CompareTag("boron11"))
         {
             Instantiate(Resources.Load("unstable-atom"), transform.position, Quaternion.identity);
             scoreValue -= 2;
             Destroy(collision.gameObject);
             Destroy(gameObject);
-            Destroy(GameObject.Find("unstable-atom(Clone)"), 2f);
             SetIon(0);
             SetScore();
+            YouHaveCreatedAtom("An Unstable Atom");
+        }
+        if (isRadioactive)
+        {
+            Destroy(clone.gameObject, 3f);
         }
 
         // Neutral Atom Combinations
@@ -109,6 +123,8 @@ public class Drag : MonoBehaviour
             scoreValue += 3;
             SetScore();
             SetIon(1);
+            YouHaveCreatedAtom("Hydrogen");
+
         }
         if (isNeutron && collision.CompareTag("hydrogen"))
         {
@@ -118,6 +134,7 @@ public class Drag : MonoBehaviour
             scoreValue += 1;
             SetScore();
             SetIon(1);
+            YouHaveCreatedAtom("Hydrogen-2 (Deuterium)");
         }
         if (isProton && collision.CompareTag("deuterium"))
         {
@@ -127,6 +144,7 @@ public class Drag : MonoBehaviour
             scoreValue += 3;
             SetScore();
             SetIon(1);
+            YouHaveCreatedAtom("Helium-3");
         }
 
         // Helium Variants
@@ -138,6 +156,7 @@ public class Drag : MonoBehaviour
             scoreValue += 1;
             SetScore();
             SetIon(1);
+            YouHaveCreatedAtom("Helium");
         }
 
         // Lithium Variants
@@ -149,6 +168,7 @@ public class Drag : MonoBehaviour
             scoreValue += 3;
             SetScore();
             SetIon(1);
+            YouHaveCreatedAtom("Lithium-6");
         }
         if (isNeutron && collision.CompareTag("lithium-6"))
         {
@@ -158,6 +178,7 @@ public class Drag : MonoBehaviour
             scoreValue += 1;
             SetScore();
             SetIon(1);
+            YouHaveCreatedAtom("Lithium-7");
         }
         if (isElectron && collision.CompareTag("lithium7"))
         {
@@ -167,6 +188,7 @@ public class Drag : MonoBehaviour
             scoreValue += 1;
             SetScore();
             SetIon(0);
+            YouHaveCreatedAtom("Lithium-7 Negative Ion");
         }
         // Berillyum Variants
         if (isElectron && collision.CompareTag("berillyum9++"))
@@ -177,6 +199,7 @@ public class Drag : MonoBehaviour
             scoreValue += 1;
             SetScore();
             SetIon(1);
+            YouHaveCreatedAtom("Berillyum-9");
         }
         if (isProton && collision.CompareTag("berillyum9"))
         {
@@ -186,6 +209,7 @@ public class Drag : MonoBehaviour
             scoreValue += 3;
             SetScore();
             SetIon(2);
+            YouHaveCreatedAtom("Boron-10++");
         }
         // Positive Ion Transformations
         if (isProton && collision.CompareTag("neutron"))
@@ -196,6 +220,7 @@ public class Drag : MonoBehaviour
             scoreValue += 1;
             SetScore();
             SetIon(2);
+            YouHaveCreatedAtom("Hydrogen-2 plus ion");
         }
         if (isElectron && collision.CompareTag("deuterium++"))
         {
@@ -205,6 +230,7 @@ public class Drag : MonoBehaviour
             scoreValue += 1;
             SetScore();
             SetIon(1);
+            YouHaveCreatedAtom("Deuterium (Hydrogen-2)");
         }
         if (isElectron && collision.CompareTag("helium3++"))
         {
@@ -214,6 +240,7 @@ public class Drag : MonoBehaviour
             scoreValue += 1;
             SetScore();
             SetIon(1);
+            YouHaveCreatedAtom("Helium-3");
         }
         if (isElectron && collision.CompareTag("helium4++"))
         {
@@ -223,6 +250,7 @@ public class Drag : MonoBehaviour
             scoreValue += 1;
             SetScore();
             SetIon(1);
+            YouHaveCreatedAtom("Helium");
         }
         if (isProtonNeutron && collision.CompareTag("lithium7"))
         {
@@ -232,6 +260,7 @@ public class Drag : MonoBehaviour
             scoreValue += 3;
             SetScore();
             SetIon(2);
+            YouHaveCreatedAtom("Beryllium-9++");
         }
         if (isProton && collision.CompareTag("berillyum9"))
         {
@@ -241,9 +270,10 @@ public class Drag : MonoBehaviour
             scoreValue += 3;
             SetScore();
             SetIon(2);
+            YouHaveCreatedAtom("Boron-10 plus ion");
         }
         // Boron Variants
-         if (isElectron && collision.CompareTag("boron10++"))
+        if (isElectron && collision.CompareTag("boron10++"))
         {
             Instantiate(Resources.Load("boron10"), transform.position, Quaternion.identity);
             Destroy(collision.gameObject);
@@ -251,6 +281,7 @@ public class Drag : MonoBehaviour
             scoreValue += 1;
             SetScore();
             SetIon(1);
+            YouHaveCreatedAtom("Boron-10");
         }
         if (isNeutron && collision.CompareTag("boron10"))
         {
@@ -260,6 +291,7 @@ public class Drag : MonoBehaviour
             scoreValue += 1;
             SetScore();
             SetIon(1);
+            YouHaveCreatedAtom("Boron-11");
         }
         // Negative Ion Transformations
         if (isElectron && collision.CompareTag("hydrogen"))
@@ -291,12 +323,12 @@ public class Drag : MonoBehaviour
         }
 
         // Fusion Reactions
-        if (isHydrogen && collision.CompareTag("hydrogen") && Temperature >= 1000)
+        if (isHydrogen && collision.CompareTag("hydrogen") && Temperature >= 100000)
         {
             Instantiate(Resources.Load("helium"), transform.position, Quaternion.identity);
             Destroy(collision.gameObject);
             Destroy(gameObject);
-            scoreValue += 10;
+            scoreValue += 100;
             SetScore();
             SetIon(0);
         }
@@ -317,6 +349,10 @@ public class Drag : MonoBehaviour
     void SetScoreTemp()
     {
         TemperatureTxt.text = "Temperature: " + Temperature + "kK";
+    }
+    public void YouHaveCreatedAtom(string GameObject)
+    {
+        AtomCreationTxt.text = "You Have Created:" + GameObject;
     }
     public void BuyTemp200()
     {

@@ -106,12 +106,12 @@ MonoBehaviour:
   islithium6: 0
   isHydrogen: 0
   isRadioactive: 1
-  Temperature: 1
   TemperatureTxt: {fileID: 0}
   score: {fileID: 0}
   curIonLevel: 50
   maxIonLevel: 100
   healthBar: {fileID: 0}
+  clone: {fileID: 2971530700368119367}
 --- !u!50 &-1996812659174701138
 Rigidbody2D:
   serializedVersion: 4
