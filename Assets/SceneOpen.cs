@@ -11,9 +11,8 @@ public class SceneOpen : MonoBehaviour
         // Load the AtomMaker scene
         UnityEngine.SceneManagement.SceneManager.LoadScene("AtomCreation");
     }
-    public void OpenMoleculeCreation()
+    public void MainMenu()
     {
-        // Load the MoleculeMaker scene
-        //UnityEngine.SceneManagement.SceneManager.LoadScene("MoleculeMaker");
+       UnityEngine.SceneManagement.SceneManager.LoadScene("TitleScreen");
     }
 }

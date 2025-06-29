@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 7327778677743594920}
   m_Layer: 0
   m_Name: atom splitter
-  m_TagString: Untagged
+  m_TagString: atomSplitter
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -129,14 +129,18 @@ MonoBehaviour:
   isNeutron: 0
   isElectron: 0
   isProtonNeutron: 0
+  isProtonElectron: 0
   islithium6: 0
   isHydrogen: 0
   isRadioactive: 0
   TemperatureTxt: {fileID: 0}
+  AtomCreationTxt: {fileID: 0}
+  PressureTxt: {fileID: 0}
   score: {fileID: 0}
   curIonLevel: 50
   maxIonLevel: 100
   healthBar: {fileID: 0}
+  clone: {fileID: 0}
 --- !u!50 &7327778677743594920
 Rigidbody2D:
   serializedVersion: 4

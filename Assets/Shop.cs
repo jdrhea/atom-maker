@@ -14,14 +14,15 @@ public class Shop : MonoBehaviour
     public GameObject item2;
     public GameObject item3;
     public GameObject item4;
+    public GameObject item5;
 
 
     // purchase buttons
     public void BuyItem1()
     {
-        if (Drag.scoreValue >= 50)
+        if (Atoms.scoreValue >= 20)
         {
-            Drag.scoreValue -= 50;
+            Atoms.scoreValue -= 20;
             SetScore();
             InventoryScript playerInventory = item.GetComponent<InventoryScript>();
             if (playerInventory != null)
@@ -32,9 +33,9 @@ public class Shop : MonoBehaviour
     }
     public void BuyItem2()
     {
-        if (Drag.scoreValue >= 200)
+        if (Atoms.scoreValue >= 50)
         {
-            Drag.scoreValue -= 200;
+            Atoms.scoreValue -= 50;
             SetScore();
             InventoryScript playerInventory = item.GetComponent<InventoryScript>();
             if (playerInventory != null)
@@ -45,9 +46,9 @@ public class Shop : MonoBehaviour
     }
     public void BuyItem3()
     {
-        if (Drag.scoreValue >= 500)
+        if (Atoms.scoreValue >= 100)
         {
-            Drag.scoreValue -= 500;
+            Atoms.scoreValue -= 100;
             SetScore();
             InventoryScript playerInventory = item.GetComponent<InventoryScript>();
             if (playerInventory != null)
@@ -58,9 +59,9 @@ public class Shop : MonoBehaviour
     }
     public void BuyItem4()
     {
-        if (Drag.Temperature >= 10)
+        if (Atoms.Temperature >= 10)
         {
-            Drag.Temperature -= 10;
+            Atoms.Temperature -= 10;
             SetScoreTemp();
             InventoryScript playerInventory = item.GetComponent<InventoryScript>();
             if (playerInventory != null)
@@ -71,10 +72,8 @@ public class Shop : MonoBehaviour
     }
     public void BuyItem5()
     {
-        if (Drag.Temperature >= 5000)
+        if (Atoms.Temperature >= 5000 && Atoms.Pressure >= 12)
         {
-            Drag.Temperature -= 5000;
-            SetScoreTemp();
             InventoryScript playerInventory = item.GetComponent<InventoryScript>();
             if (playerInventory != null)
             {
@@ -82,6 +81,7 @@ public class Shop : MonoBehaviour
             }
         }
     }
+    
     // using of items
     public void UseItem1()
     {
@@ -156,15 +156,35 @@ public class Shop : MonoBehaviour
         
         
     }
+    public void UseItem5()
+    {
+    
+        if (InventoryScript.canUse5)
+        {
+            FusionChamberScript.isFusionChamberActive = true;
+            item5.SetActive(true);
+            InventoryScript playerInventory = item.GetComponent<InventoryScript>();
+            if (playerInventory != null)
+            {
+                playerInventory.RemoveItem("Fusion Chamber", 1);
+            }
+        }
+        else
+        {
+            Debug.Log("You don't have this item in your inventory");
+        }
+        
+        
+    }
 
     void SetScore()
     {
-        score.text = "Money: $" + Drag.scoreValue;
+        score.text = "Money: $" + Atoms.scoreValue;
 
     }
     void SetScoreTemp()
     {
-        TemperatureTxt.text = "Temperature: " + Drag.Temperature + "kK";
+        TemperatureTxt.text = "Temperature: " + Atoms.Temperature + "kK";
     }
 
 }

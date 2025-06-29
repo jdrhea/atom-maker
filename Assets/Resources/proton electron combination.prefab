@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 4226682233801880372}
   m_Layer: 0
   m_Name: proton electron combination
-  m_TagString: Untagged
+  m_TagString: p-e combination
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -103,14 +103,18 @@ MonoBehaviour:
   isNeutron: 0
   isElectron: 0
   isProtonNeutron: 0
+  isProtonElectron: 1
   islithium6: 0
   isHydrogen: 0
   isRadioactive: 0
   TemperatureTxt: {fileID: 0}
+  AtomCreationTxt: {fileID: 0}
+  PressureTxt: {fileID: 0}
   score: {fileID: 0}
   curIonLevel: 50
   maxIonLevel: 100
   healthBar: {fileID: 0}
+  clone: {fileID: 0}
 --- !u!58 &4153222033152721151
 CircleCollider2D:
   m_ObjectHideFlags: 0

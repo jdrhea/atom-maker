@@ -11,10 +11,11 @@ public class InventoryScript : MonoBehaviour
     public static bool canUse2;
     public static bool canUse3;
     public static bool canUse4;
+    public static bool canUse5;
 
     void Update()
     {
-        Debug.Log(canUse);
+        Debug.Log(canUse5);
     }
 
     public void AddItem(string itemName, int quantity = 1)
@@ -32,6 +33,14 @@ public class InventoryScript : MonoBehaviour
         if (itemName == "Atom Splitter")
         {
             canUse3 = true;
+        }
+        if (itemName == "Ionizer")
+        {
+            canUse4 = true;
+        }
+        if (itemName == "Fusion Chamber")
+        {
+            canUse5 = true;
         }
         //Debug.Log($"Added {quantity} {itemName}(s) to inventory.");
         UpdateUI();

@@ -34,6 +34,9 @@ TagManager:
   - boron10++
   - boron10
   - boron11
+  - p-e combination
+  - atomSplitter
+  - ionizer
   layers:
   - Default
   - TransparentFX
