@@ -19,8 +19,7 @@ public class Shop : MonoBehaviour
 
 
     // purchase buttons
-     // Helper method to hide CantAfford image after 2 seconds
-    private IEnumerator HideCantAfford()
+     private IEnumerator HideCantAfford()
     {
         yield return new WaitForSeconds(2f);
         CantAfford.gameObject.SetActive(false);
@@ -114,6 +113,101 @@ public class Shop : MonoBehaviour
             CantAfford.gameObject.SetActive(true);
             StartCoroutine(HideCantAfford());
         }
+    }
+    
+    // using of items
+    public void UseItem1()
+    {
+        if (InventoryScript.canUse)
+        {
+            Instantiate(item1, new Vector3(0, 0, 0), Quaternion.identity);
+            InventoryScript playerInventory = item.GetComponent<InventoryScript>();
+            if (playerInventory != null)
+            {
+                playerInventory.RemoveItem("Proton-Electron Combination", 1);
+            }
+        }
+        else
+        {
+            Debug.Log("You don't have this item in your inventory");
+        }
+        
+    }
+    public void UseItem2()
+    {
+        if (InventoryScript.canUse2)
+        {
+            item2.SetActive(true);
+            InventoryScript playerInventory = item.GetComponent<InventoryScript>();
+            if (playerInventory != null)
+            {
+                 playerInventory.RemoveItem("Pressure Cooker", 1);
+            }
+
+        }
+        else
+        {
+            Debug.Log("You don't have this item in your inventory");
+        }
+
+    }
+    public void UseItem3()
+    {
+    
+        if (InventoryScript.canUse3)
+        {
+            Instantiate(item3, new Vector3(0, 0, 0), Quaternion.identity);
+            InventoryScript playerInventory = item.GetComponent<InventoryScript>();
+            if (playerInventory != null)
+            {
+                playerInventory.RemoveItem("Atom Splitter", 1);
+            }
+        }
+        else
+        {
+            Debug.Log("You don't have this item in your inventory");
+        }
+        
+        
+    }
+    public void UseItem4()
+    {
+    
+        if (InventoryScript.canUse4)
+        {
+            Instantiate(item4, new Vector3(0, 0, 0), Quaternion.identity);
+            InventoryScript playerInventory = item.GetComponent<InventoryScript>();
+            if (playerInventory != null)
+            {
+                playerInventory.RemoveItem("Ionizer", 1);
+            }
+        }
+        else
+        {
+            Debug.Log("You don't have this item in your inventory");
+        }
+        
+        
+    }
+    public void UseItem5()
+    {
+    
+        if (InventoryScript.canUse5)
+        {
+            FusionChamberScript.isFusionChamberActive = true;
+            item5.SetActive(true);
+            InventoryScript playerInventory = item.GetComponent<InventoryScript>();
+            if (playerInventory != null)
+            {
+                playerInventory.RemoveItem("Fusion Chamber", 1);
+            }
+        }
+        else
+        {
+            Debug.Log("You don't have this item in your inventory");
+        }
+        
+        
     }
 
     void SetScore()

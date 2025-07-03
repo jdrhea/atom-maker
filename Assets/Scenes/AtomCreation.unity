@@ -10779,6 +10779,10 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5694143155178948522, guid: aaf3afebcca804e7b8b98fe07a343464, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: UseItem1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5694143155178948522, guid: aaf3afebcca804e7b8b98fe07a343464, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
       value: PlayMouseClick
       objectReference: {fileID: 0}
