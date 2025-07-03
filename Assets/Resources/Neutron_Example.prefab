@@ -77,8 +77,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
-  m_Color: {r: 0.0047169924, g: 0.100311816, b: 1, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 0b4d78013dc744e1eb5a507a81cb0444, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -104,15 +104,19 @@ MonoBehaviour:
   isNeutron: 1
   isElectron: 0
   isProtonNeutron: 0
+  isProtonElectron: 0
   islithium6: 0
   isHydrogen: 0
   isRadioactive: 0
-  Temperature: 1
   TemperatureTxt: {fileID: 0}
+  AtomCreationTxt: {fileID: 0}
+  PressureTxt: {fileID: 0}
   score: {fileID: 0}
+  AmountOfAtomsTxt: {fileID: 0}
   curIonLevel: 50
   maxIonLevel: 100
   healthBar: {fileID: 0}
+  clone: {fileID: 2971530700368119367, guid: a800aa33f9250422f8ad338ddecf6424, type: 3}
 --- !u!58 &1215447883536877053
 CircleCollider2D:
   m_ObjectHideFlags: 0

@@ -37,6 +37,7 @@ TagManager:
   - p-e combination
   - atomSplitter
   - ionizer
+  - AudioManager
   layers:
   - Default
   - TransparentFX

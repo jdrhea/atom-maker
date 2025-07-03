@@ -104,15 +104,19 @@ MonoBehaviour:
   isNeutron: 0
   isElectron: 0
   isProtonNeutron: 1
+  isProtonElectron: 0
   islithium6: 0
   isHydrogen: 0
   isRadioactive: 0
-  Temperature: 1
   TemperatureTxt: {fileID: 0}
+  AtomCreationTxt: {fileID: 0}
+  PressureTxt: {fileID: 0}
   score: {fileID: 0}
+  AmountOfAtomsTxt: {fileID: 0}
   curIonLevel: 50
   maxIonLevel: 100
   healthBar: {fileID: 0}
+  clone: {fileID: 2971530700368119367, guid: a800aa33f9250422f8ad338ddecf6424, type: 3}
 --- !u!61 &-1138427775672426432
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -137,10 +137,11 @@ MonoBehaviour:
   AtomCreationTxt: {fileID: 0}
   PressureTxt: {fileID: 0}
   score: {fileID: 0}
+  AmountOfAtomsTxt: {fileID: 0}
   curIonLevel: 50
   maxIonLevel: 100
   healthBar: {fileID: 0}
-  clone: {fileID: 0}
+  clone: {fileID: 2971530700368119367, guid: a800aa33f9250422f8ad338ddecf6424, type: 3}
 --- !u!50 &7327778677743594920
 Rigidbody2D:
   serializedVersion: 4

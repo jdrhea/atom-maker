@@ -36,6 +36,7 @@ public class Atoms : MonoBehaviour
     public GameObject clone;
 
     Vector3 newPosition;
+    AudioManager AudioManager;
 
 
 
@@ -84,6 +85,7 @@ public class Atoms : MonoBehaviour
             AmountOfAtomsTxt = foundText.GetComponent<Text>();
 
         }
+        AudioManager = GameObject.FindGameObjectWithTag("AudioManager").GetComponent<AudioManager>();
     }
     void Update()
     {
@@ -91,6 +93,17 @@ public class Atoms : MonoBehaviour
         {
             transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition) + offset;
 
+        }
+        if (isRadioactive)
+        {
+            if (clone != null)
+            {
+                Destroy(clone.gameObject, 4f);
+            }
+            else
+            {
+                Debug.LogWarning("Clone is null, cannot destroy.");
+            }
         }
         SetScoreTemp();
         SetPressure();
@@ -114,6 +127,7 @@ public class Atoms : MonoBehaviour
         }
         if (collision.CompareTag("atomSplitter") && isRadioactive)
         {
+            AudioManager.PlaySFX(AudioManager.ding);
             // Instantiate explosion animation at the atom's position
             GameObject explosion = Instantiate(Resources.Load("explosion"), transform.position, Quaternion.identity) as GameObject;
             // Optionally destroy the explosion after its animation duration (e.g., 2 seconds)
@@ -133,6 +147,7 @@ public class Atoms : MonoBehaviour
         collision.CompareTag("ionizer") && CompareTag("deuterium") ||
         collision.CompareTag("ionizer") && CompareTag("hydrogen2--"))
         {
+            AudioManager.PlaySFX(AudioManager.ding);
             // Instantiate ionized hydrogen atom
             Instantiate(Resources.Load("plus-ion-hydrogen"), transform.position, Quaternion.identity);
             Destroy(gameObject);
@@ -147,6 +162,7 @@ public class Atoms : MonoBehaviour
         collision.CompareTag("ionizer") && CompareTag("helium3--") ||
         collision.CompareTag("ionizer") && CompareTag("helium4--"))
         {
+            AudioManager.PlaySFX(AudioManager.ding);
             // Instantiate ionized helium atom
             Instantiate(Resources.Load("ionized-helium"), transform.position, Quaternion.identity);
             Destroy(gameObject);
@@ -161,6 +177,7 @@ public class Atoms : MonoBehaviour
         collision.CompareTag("ionizer") && CompareTag("lithium7") ||
         collision.CompareTag("ionizer") && CompareTag("lithium7--"))
         {
+            AudioManager.PlaySFX(AudioManager.ding);
             // Instantiate ionized lithium atom
             Instantiate(Resources.Load("ionized-lithium"), transform.position, Quaternion.identity);
             Destroy(gameObject);
@@ -172,6 +189,7 @@ public class Atoms : MonoBehaviour
         }
         if (collision.CompareTag("ionizer") && CompareTag("berillyum9"))
         {
+            AudioManager.PlaySFX(AudioManager.ding);
             // Instantiate ionized berillyum atom
             Instantiate(Resources.Load("ionized-berillyum"), transform.position, Quaternion.identity);
             Destroy(gameObject);
@@ -184,6 +202,7 @@ public class Atoms : MonoBehaviour
         if (collision.CompareTag("ionizer") && CompareTag("boron10") ||
         collision.CompareTag("ionizer") && CompareTag("boron11"))
         {
+            AudioManager.PlaySFX(AudioManager.ding);
             // Instantiate ionized boron atom
             Instantiate(Resources.Load("ionized-boron"), transform.position, Quaternion.identity);
             Destroy(gameObject);
@@ -195,7 +214,7 @@ public class Atoms : MonoBehaviour
         }
     }
     private void OnTriggerStay2D(Collider2D collision)
-    {
+{
         // Handle collisions with other atoms :)
         // Unstable Atoms
         if (isNeutron && collision.CompareTag("electron") ||
@@ -204,6 +223,7 @@ public class Atoms : MonoBehaviour
             isNeutron && collision.CompareTag("berillyum9") ||
             isNeutron && collision.CompareTag("boron11"))
         {
+            AudioManager.PlaySFX(AudioManager.ding); // Play ding sound
             Instantiate(Resources.Load("unstable-atom"), transform.position, Quaternion.identity);
             scoreValue -= 2;
             Destroy(collision.gameObject);
@@ -213,15 +233,12 @@ public class Atoms : MonoBehaviour
             YouHaveCreatedAtom("An Unstable Atom");
             AmountOfAtoms(1);
         }
-        if (isRadioactive)
-        {
-            Destroy(clone.gameObject, 3f);
-        }
 
-        // Neutral Atom Combinations
+    // Neutral Atom Combinations
         // Hydrogen Variants
         if (isProton && collision.CompareTag("electron"))
         {
+            AudioManager.PlaySFX(AudioManager.ding); // Play ding sound
             Instantiate(Resources.Load("hydrogen"), transform.position, Quaternion.identity);
             Destroy(collision.gameObject);
             Destroy(gameObject);
@@ -232,261 +249,282 @@ public class Atoms : MonoBehaviour
             AmountOfAtoms(1);
 
         }
-        if (isNeutron && collision.CompareTag("hydrogen") || isNeutron && collision.CompareTag("p-e combination"))
-        {
-            Instantiate(Resources.Load("hydrogen-2"), transform.position, Quaternion.identity);
-            Destroy(collision.gameObject);
-            Destroy(gameObject);
-            scoreValue += 1;
-            SetScore();
-            SetIon(1);
-            YouHaveCreatedAtom("Hydrogen-2 (Deuterium)");
-            AmountOfAtoms(1);
-        }
-        if (isProton && collision.CompareTag("deuterium"))
-        {
-            Instantiate(Resources.Load("helium-3"), transform.position, Quaternion.identity);
-            Destroy(collision.gameObject);
-            Destroy(gameObject);
-            scoreValue += 3;
-            SetScore();
-            SetIon(1);
-            YouHaveCreatedAtom("Helium-3");
-            AmountOfAtoms(1);
-        }
-        if (isProtonElectron && collision.CompareTag("proton"))
-        {
-            Instantiate(Resources.Load("hydrogen1--"), transform.position, Quaternion.identity);
-            Destroy(collision.gameObject);
-            Destroy(gameObject);
-            scoreValue += 10;
-            SetScore();
-            SetIon(0);
-            YouHaveCreatedAtom("Hydrogen-1 Negative Ion");
-            AmountOfAtoms(1);
-        }
-        // Helium Variants
-        if (isNeutron && collision.CompareTag("hel3"))
-        {
-            Instantiate(Resources.Load("helium"), transform.position, Quaternion.identity);
-            Destroy(collision.gameObject);
-            Destroy(gameObject);
-            scoreValue += 1;
-            SetScore();
-            SetIon(1);
-            YouHaveCreatedAtom("Helium");
-            AmountOfAtoms(1);
-        }
-        if (isProtonElectron && collision.CompareTag("p&n"))
-        {
-            Instantiate(Resources.Load("helium3++"), transform.position, Quaternion.identity);
-            Destroy(collision.gameObject);
-            Destroy(gameObject);
-            scoreValue += 10;
-            SetScore();
-            SetIon(2);
-            YouHaveCreatedAtom("Helium-3 plus ion");
-            AmountOfAtoms(1);
-        }
-
-        // Lithium Variants
-        if (isProtonNeutron && collision.CompareTag("helium"))
-        {
-            Instantiate(Resources.Load("lithium6"), transform.position, Quaternion.identity);
-            Destroy(collision.gameObject);
-            Destroy(gameObject);
-            scoreValue += 3;
-            SetScore();
-            SetIon(1);
-            YouHaveCreatedAtom("Lithium-6");
-            AmountOfAtoms(1);
-        }
-        if (isNeutron && collision.CompareTag("lithium-6"))
-        {
-            Instantiate(Resources.Load("lithium7"), transform.position, Quaternion.identity);
-            Destroy(collision.gameObject);
-            Destroy(gameObject);
-            scoreValue += 1;
-            SetScore();
-            SetIon(1);
-            YouHaveCreatedAtom("Lithium-7");
-            AmountOfAtoms(1);
-        }
-        if (isElectron && collision.CompareTag("lithium7"))
-        {
-            Instantiate(Resources.Load("lithium7--"), transform.position, Quaternion.identity);
-            Destroy(collision.gameObject);
-            Destroy(gameObject);
-            scoreValue += 1;
-            SetScore();
-            SetIon(0);
-            YouHaveCreatedAtom("Lithium-7 Negative Ion");
-            AmountOfAtoms(1);
-        }
-        // Berillyum Variants
-        if (isElectron && collision.CompareTag("berillyum9++"))
-        {
-            Instantiate(Resources.Load("berillyum9"), transform.position, Quaternion.identity);
-            Destroy(collision.gameObject);
-            Destroy(gameObject);
-            scoreValue += 1;
-            SetScore();
-            SetIon(1);
-            YouHaveCreatedAtom("Berillyum-9");
-            AmountOfAtoms(1);
-        }
-        if (isProton && collision.CompareTag("berillyum9"))
-        {
-            Instantiate(Resources.Load("boron10++"), transform.position, Quaternion.identity);
-            Destroy(collision.gameObject);
-            Destroy(gameObject);
-            scoreValue += 3;
-            SetScore();
-            SetIon(2);
-            YouHaveCreatedAtom("Boron-10++");
-            AmountOfAtoms(1);
-        }
-        // Positive Ion Transformations
-        if (isProton && collision.CompareTag("neutron"))
-        {
-            Instantiate(Resources.Load("plus-ion-hydrogen2"), transform.position, Quaternion.identity);
-            Destroy(collision.gameObject);
-            Destroy(gameObject);
-            scoreValue += 1;
-            SetScore();
-            SetIon(2);
-            YouHaveCreatedAtom("Hydrogen-2 plus ion");
-            AmountOfAtoms(1);
-        }
-        if (isElectron && collision.CompareTag("deuterium++"))
-        {
-            Instantiate(Resources.Load("hydrogen-2"), transform.position, Quaternion.identity);
-            Destroy(collision.gameObject);
-            Destroy(gameObject);
-            scoreValue += 1;
-            SetScore();
-            SetIon(1);
-            YouHaveCreatedAtom("Deuterium (Hydrogen-2)");
-            AmountOfAtoms(1);
-        }
-        if (isElectron && collision.CompareTag("helium3++"))
-        {
-            Instantiate(Resources.Load("helium-3"), transform.position, Quaternion.identity);
-            Destroy(collision.gameObject);
-            Destroy(gameObject);
-            scoreValue += 1;
-            SetScore();
-            SetIon(1);
-            YouHaveCreatedAtom("Helium-3");
-            AmountOfAtoms(1);
-        }
-        if (isElectron && collision.CompareTag("helium4++"))
-        {
-            Instantiate(Resources.Load("helium"), transform.position, Quaternion.identity);
-            Destroy(collision.gameObject);
-            Destroy(gameObject);
-            scoreValue += 1;
-            SetScore();
-            SetIon(1);
-            YouHaveCreatedAtom("Helium");
-            AmountOfAtoms(1);
-        }
-        if (isProtonNeutron && collision.CompareTag("lithium7"))
-        {
-            Instantiate(Resources.Load("berillyum9++"), transform.position, Quaternion.identity);
-            Destroy(collision.gameObject);
-            Destroy(gameObject);
-            scoreValue += 3;
-            SetScore();
-            SetIon(2);
-            YouHaveCreatedAtom("Beryllium-9++");
-            AmountOfAtoms(1);
-        }
-        if (isProton && collision.CompareTag("berillyum9"))
-        {
-            Instantiate(Resources.Load("boron10++"), transform.position, Quaternion.identity);
-            Destroy(collision.gameObject);
-            Destroy(gameObject);
-            scoreValue += 3;
-            SetScore();
-            SetIon(2);
-            YouHaveCreatedAtom("Boron-10 plus ion");
-            AmountOfAtoms(1);
-        }
-        // Boron Variants
-        // first two are the same output
-        if (isElectron && collision.CompareTag("boron10++"))
-        {
-            Instantiate(Resources.Load("boron10"), transform.position, Quaternion.identity);
-            Destroy(collision.gameObject);
-            Destroy(gameObject);
-            scoreValue += 1;
-            SetScore();
-            SetIon(1);
-            YouHaveCreatedAtom("Boron-10");
-            AmountOfAtoms(1);
-        }
-        if (isProtonElectron && collision.CompareTag("berillyum9"))
-        {
-            Instantiate(Resources.Load("boron10"), transform.position, Quaternion.identity);
-            Destroy(collision.gameObject);
-            Destroy(gameObject);
-            scoreValue += 10;
-            SetScore();
-            SetIon(1);
-            YouHaveCreatedAtom("Boron-10");
-            AmountOfAtoms(1);
-        }
-        if (isNeutron && collision.CompareTag("boron10"))
-        {
-            Instantiate(Resources.Load("boron11"), transform.position, Quaternion.identity);
-            Destroy(collision.gameObject);
-            Destroy(gameObject);
-            scoreValue += 1;
-            SetScore();
-            SetIon(1);
-            YouHaveCreatedAtom("Boron-11");
-            AmountOfAtoms(1);
-        }
-        // Negative Ion Transformations
-        if (isElectron && collision.CompareTag("hydrogen"))
-        {
-            Instantiate(Resources.Load("hydrogen1--"), transform.position, Quaternion.identity);
-            Destroy(collision.gameObject);
-            Destroy(gameObject);
-            scoreValue += 1;
-            SetScore();
-            SetIon(0);
-            YouHaveCreatedAtom("Hydrogen-1 Negative Ion");
-            AmountOfAtoms(1);
-        }
-        if (isProton && collision.CompareTag("hydrogen2--"))
-        {
-            Instantiate(Resources.Load("hydrogen-2"), transform.position, Quaternion.identity);
-            Destroy(collision.gameObject);
-            Destroy(gameObject);
-            scoreValue += 1;
-            SetScore();
-            SetIon(0);
-            YouHaveCreatedAtom("Deuterium (Hydrogen-2)");
-            AmountOfAtoms(1);
-        }
-        if (isProton && collision.CompareTag("helium3--"))
-        {
-            Instantiate(Resources.Load("helium-3"), transform.position, Quaternion.identity);
-            Destroy(collision.gameObject);
-            Destroy(gameObject);
-            scoreValue += 1;
-            SetScore();
-            SetIon(0);
-            YouHaveCreatedAtom("Helium-3");
-            AmountOfAtoms(1);
-        }
-
-
+    if (isNeutron && collision.CompareTag("hydrogen") || isNeutron && collision.CompareTag("p-e combination"))
+    {
+        AudioManager.PlaySFX(AudioManager.ding); // Play ding sound
+        Instantiate(Resources.Load("hydrogen-2"), transform.position, Quaternion.identity);
+        Destroy(collision.gameObject);
+        Destroy(gameObject);
+        scoreValue += 1;
+        SetScore();
+        SetIon(1);
+        YouHaveCreatedAtom("Hydrogen-2 (Deuterium)");
+        AmountOfAtoms(1);
     }
+    if (isProton && collision.CompareTag("deuterium"))
+    {
+        AudioManager.PlaySFX(AudioManager.ding); // Play ding sound
+        Instantiate(Resources.Load("helium-3"), transform.position, Quaternion.identity);
+        Destroy(collision.gameObject);
+        Destroy(gameObject);
+        scoreValue += 3;
+        SetScore();
+        SetIon(1);
+        YouHaveCreatedAtom("Helium-3");
+        AmountOfAtoms(1);
+    }
+    if (isProtonElectron && collision.CompareTag("proton"))
+    {
+        AudioManager.PlaySFX(AudioManager.ding); // Play ding sound
+        Instantiate(Resources.Load("hydrogen1--"), transform.position, Quaternion.identity);
+        Destroy(collision.gameObject);
+        Destroy(gameObject);
+        scoreValue += 10;
+        SetScore();
+        SetIon(0);
+        YouHaveCreatedAtom("Hydrogen-1 Negative Ion");
+        AmountOfAtoms(1);
+    }
+    // Helium Variants
+    if (isNeutron && collision.CompareTag("hel3"))
+    {
+        AudioManager.PlaySFX(AudioManager.ding); // Play ding sound
+        Instantiate(Resources.Load("helium"), transform.position, Quaternion.identity);
+        Destroy(collision.gameObject);
+        Destroy(gameObject);
+        scoreValue += 1;
+        SetScore();
+        SetIon(1);
+        YouHaveCreatedAtom("Helium");
+        AmountOfAtoms(1);
+    }
+    if (isProtonElectron && collision.CompareTag("p&n"))
+    {
+        AudioManager.PlaySFX(AudioManager.ding); // Play ding sound
+        Instantiate(Resources.Load("helium3++"), transform.position, Quaternion.identity);
+        Destroy(collision.gameObject);
+        Destroy(gameObject);
+        scoreValue += 10;
+        SetScore();
+        SetIon(2);
+        YouHaveCreatedAtom("Helium-3 plus ion");
+        AmountOfAtoms(1);
+    }
+
+    // Lithium Variants
+    if (isProtonNeutron && collision.CompareTag("helium"))
+    {
+        AudioManager.PlaySFX(AudioManager.ding); // Play ding sound
+        Instantiate(Resources.Load("lithium6"), transform.position, Quaternion.identity);
+        Destroy(collision.gameObject);
+        Destroy(gameObject);
+        scoreValue += 3;
+        SetScore();
+        SetIon(1);
+        YouHaveCreatedAtom("Lithium-6");
+        AmountOfAtoms(1);
+    }
+    if (isNeutron && collision.CompareTag("lithium-6"))
+    {
+        AudioManager.PlaySFX(AudioManager.ding); // Play ding sound
+        Instantiate(Resources.Load("lithium7"), transform.position, Quaternion.identity);
+        Destroy(collision.gameObject);
+        Destroy(gameObject);
+        scoreValue += 1;
+        SetScore();
+        SetIon(1);
+        YouHaveCreatedAtom("Lithium-7");
+        AmountOfAtoms(1);
+    }
+    if (isElectron && collision.CompareTag("lithium7"))
+    {
+        AudioManager.PlaySFX(AudioManager.ding); // Play ding sound
+        Instantiate(Resources.Load("lithium7--"), transform.position, Quaternion.identity);
+        Destroy(collision.gameObject);
+        Destroy(gameObject);
+        scoreValue += 1;
+        SetScore();
+        SetIon(0);
+        YouHaveCreatedAtom("Lithium-7 Negative Ion");
+        AmountOfAtoms(1);
+    }
+    // Berillyum Variants
+    if (isElectron && collision.CompareTag("berillyum9++"))
+    {
+        AudioManager.PlaySFX(AudioManager.ding); // Play ding sound
+        Instantiate(Resources.Load("berillyum9"), transform.position, Quaternion.identity);
+        Destroy(collision.gameObject);
+        Destroy(gameObject);
+        scoreValue += 1;
+        SetScore();
+        SetIon(1);
+        YouHaveCreatedAtom("Berillyum-9");
+        AmountOfAtoms(1);
+    }
+    if (isProton && collision.CompareTag("berillyum9"))
+    {
+        AudioManager.PlaySFX(AudioManager.ding); // Play ding sound
+        Instantiate(Resources.Load("boron10++"), transform.position, Quaternion.identity);
+        Destroy(collision.gameObject);
+        Destroy(gameObject);
+        scoreValue += 3;
+        SetScore();
+        SetIon(2);
+        YouHaveCreatedAtom("Boron-10++");
+        AmountOfAtoms(1);
+    }
+    // Positive Ion Transformations
+    if (isProton && collision.CompareTag("neutron"))
+    {
+        AudioManager.PlaySFX(AudioManager.ding); // Play ding sound
+        Instantiate(Resources.Load("plus-ion-hydrogen2"), transform.position, Quaternion.identity);
+        Destroy(collision.gameObject);
+        Destroy(gameObject);
+        scoreValue += 1;
+        SetScore();
+        SetIon(2);
+        YouHaveCreatedAtom("Hydrogen-2 plus ion");
+        AmountOfAtoms(1);
+    }
+    if (isElectron && collision.CompareTag("deuterium++"))
+    {
+        AudioManager.PlaySFX(AudioManager.ding); // Play ding sound
+        Instantiate(Resources.Load("hydrogen-2"), transform.position, Quaternion.identity);
+        Destroy(collision.gameObject);
+        Destroy(gameObject);
+        scoreValue += 1;
+        SetScore();
+        SetIon(1);
+        YouHaveCreatedAtom("Deuterium (Hydrogen-2)");
+        AmountOfAtoms(1);
+    }
+    if (isElectron && collision.CompareTag("helium3++"))
+    {
+        AudioManager.PlaySFX(AudioManager.ding); // Play ding sound
+        Instantiate(Resources.Load("helium-3"), transform.position, Quaternion.identity);
+        Destroy(collision.gameObject);
+        Destroy(gameObject);
+        scoreValue += 1;
+        SetScore();
+        SetIon(1);
+        YouHaveCreatedAtom("Helium-3");
+        AmountOfAtoms(1);
+    }
+    if (isElectron && collision.CompareTag("helium4++"))
+    {
+        AudioManager.PlaySFX(AudioManager.ding); // Play ding sound
+        Instantiate(Resources.Load("helium"), transform.position, Quaternion.identity);
+        Destroy(collision.gameObject);
+        Destroy(gameObject);
+        scoreValue += 1;
+        SetScore();
+        SetIon(1);
+        YouHaveCreatedAtom("Helium");
+        AmountOfAtoms(1);
+    }
+    if (isProtonNeutron && collision.CompareTag("lithium7"))
+    {
+        AudioManager.PlaySFX(AudioManager.ding); // Play ding sound
+        Instantiate(Resources.Load("berillyum9++"), transform.position, Quaternion.identity);
+        Destroy(collision.gameObject);
+        Destroy(gameObject);
+        scoreValue += 3;
+        SetScore();
+        SetIon(2);
+        YouHaveCreatedAtom("Beryllium-9++");
+        AmountOfAtoms(1);
+    }
+    if (isProton && collision.CompareTag("berillyum9"))
+    {
+        AudioManager.PlaySFX(AudioManager.ding); // Play ding sound
+        Instantiate(Resources.Load("boron10++"), transform.position, Quaternion.identity);
+        Destroy(collision.gameObject);
+        Destroy(gameObject);
+        scoreValue += 3;
+        SetScore();
+        SetIon(2);
+        YouHaveCreatedAtom("Boron-10 plus ion");
+        AmountOfAtoms(1);
+    }
+    // Boron Variants
+    // first two are the same output
+    if (isElectron && collision.CompareTag("boron10++"))
+    {
+        AudioManager.PlaySFX(AudioManager.ding); // Play ding sound
+        Instantiate(Resources.Load("boron10"), transform.position, Quaternion.identity);
+        Destroy(collision.gameObject);
+        Destroy(gameObject);
+        scoreValue += 1;
+        SetScore();
+        SetIon(1);
+        YouHaveCreatedAtom("Boron-10");
+        AmountOfAtoms(1);
+    }
+    if (isProtonElectron && collision.CompareTag("berillyum9"))
+    {
+        AudioManager.PlaySFX(AudioManager.ding); // Play ding sound
+        Instantiate(Resources.Load("boron10"), transform.position, Quaternion.identity);
+        Destroy(collision.gameObject);
+        Destroy(gameObject);
+        scoreValue += 10;
+        SetScore();
+        SetIon(1);
+        YouHaveCreatedAtom("Boron-10");
+        AmountOfAtoms(1);
+    }
+    if (isNeutron && collision.CompareTag("boron10"))
+    {
+        AudioManager.PlaySFX(AudioManager.ding); // Play ding sound
+        Instantiate(Resources.Load("boron11"), transform.position, Quaternion.identity);
+        Destroy(collision.gameObject);
+        Destroy(gameObject);
+        scoreValue += 1;
+        SetScore();
+        SetIon(1);
+        YouHaveCreatedAtom("Boron-11");
+        AmountOfAtoms(1);
+    }
+    // Negative Ion Transformations
+    if (isElectron && collision.CompareTag("hydrogen"))
+    {
+        AudioManager.PlaySFX(AudioManager.ding); // Play ding sound
+        Instantiate(Resources.Load("hydrogen1--"), transform.position, Quaternion.identity);
+        Destroy(collision.gameObject);
+        Destroy(gameObject);
+        scoreValue += 1;
+        SetScore();
+        SetIon(0);
+        YouHaveCreatedAtom("Hydrogen-1 Negative Ion");
+        AmountOfAtoms(1);
+    }
+    if (isProton && collision.CompareTag("hydrogen2--"))
+    {
+        AudioManager.PlaySFX(AudioManager.ding); // Play ding sound
+        Instantiate(Resources.Load("hydrogen-2"), transform.position, Quaternion.identity);
+        Destroy(collision.gameObject);
+        Destroy(gameObject);
+        scoreValue += 1;
+        SetScore();
+        SetIon(0);
+        YouHaveCreatedAtom("Deuterium (Hydrogen-2)");
+        AmountOfAtoms(1);
+    }
+    if (isProton && collision.CompareTag("helium3--"))
+    {
+        AudioManager.PlaySFX(AudioManager.ding); // Play ding sound
+        Instantiate(Resources.Load("helium-3"), transform.position, Quaternion.identity);
+        Destroy(collision.gameObject);
+        Destroy(gameObject);
+        scoreValue += 1;
+        SetScore();
+        SetIon(0);
+        YouHaveCreatedAtom("Helium-3");
+        AmountOfAtoms(1);
+    }
+}
     public void FuseAtoms()
     {
+        AudioManager.PlaySFX(AudioManager.ding);
         GameObject[] hydrogen = GameObject.FindGameObjectsWithTag("hydrogen");
 
         if (hydrogen.Length >= 2)
@@ -508,7 +546,6 @@ public class Atoms : MonoBehaviour
         {
             Debug.Log("Not enough deuterium atoms for fusion!");
         }
-        AmountOfAtoms(1);
 
     }
     void SetScore()
